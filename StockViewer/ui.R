@@ -17,8 +17,6 @@ shinyUI(pageWithSidebar(
                label = 'Date Range: Year - Month - Day',
                start = Sys.Date() - 366, end = Sys.Date() - 1),
                
-               actionButton("get", "Get Stock"),
-               
                helpText("Source: Yahoo Finance")
                
                ),
