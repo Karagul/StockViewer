@@ -8,7 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-StockViewer needs the latest version of R and Rstudio in order to run. Also, the following R packages are needed:
+StockViewer needs the latest version of R and Rstudio in order to run properly. Also, the following R packages are needed (also updated to their latest versions):
 
 ```
 xts
