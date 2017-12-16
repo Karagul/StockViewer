@@ -20,14 +20,14 @@ shinythemes
 ```
 ### Get it running
 
-First, you'll need to install both [R](https://cran.r-project.org/bin/windows/base/) and [Rstudio](https://www.rstudio.com/products/rstudio/download/). 
+First, install both [R](https://cran.r-project.org/bin/windows/base/) and [Rstudio](https://www.rstudio.com/products/rstudio/download/). 
 
-Then, you'll need to install the required packages. To do so, open Rstudio and type the following in the Console (or in a new script):
+Then, install the required packages. To do so, open Rstudio and type the following in the Console (or in a new script):
 ```
 packages <- c("xts", "zoo", "quantmod", "shiny", "ggplot2", "shinythemes")
 install.packages(packages)
 ```
-Finally, you'll need to download the repository and open both `ui.R` and `server.R` in Rstudio. After that, just click on `Run App` on the top right corner of either script window. To run in your browser, click on the `Open in Browser` option (top left corner) after running the app.
+Finally, download the repository and open both `ui.R` and `server.R` in Rstudio. After that, just click on `Run App` on the top right corner of either script window. To run in your browser, click on the `Open in Browser` option (top left corner) after running the app.
 
 ## Usage
 
