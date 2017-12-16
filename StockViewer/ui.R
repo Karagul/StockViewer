@@ -6,6 +6,7 @@ library(ggplot2)
 library(shinythemes)
 library(shinydashboard)
 
+
 fluidPage(theme = shinytheme("flatly"),
 
   pageWithSidebar(
@@ -19,7 +20,7 @@ fluidPage(theme = shinytheme("flatly"),
                
                dateRangeInput('dateRange',
                label = 'Date Range: Year - Month - Day',
-               start = Sys.Date() - 366, end = Sys.Date() - 1),
+               start = Sys.Date() - 366, end = Sys.Date() - 1, min = "2007-01-01", max = Sys.Date(), startview = "decade"),
                
                helpText("Source: Yahoo Finance")
                
