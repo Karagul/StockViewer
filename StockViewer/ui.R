@@ -3,13 +3,17 @@ library(zoo)
 library(quantmod)
 library(shiny)
 library(ggplot2)
+library(shinythemes)
+library(shinydashboard)
 
-shinyUI(pageWithSidebar(
+fluidPage(theme = shinytheme("flatly"),
+
+  pageWithSidebar(
   
   headerPanel("Stock Viewer"),
   
   sidebarPanel(
-               textInput("symbol", label = h3("Stock"), value = "",placeholder = "Enter ticker..."),
+               textInput("symbol", label = h3("Stock"), value = "", placeholder = "Enter ticker..."),
                hr(),
                fluidRow(column(3, verbatimTextOutput("value"))),
                
