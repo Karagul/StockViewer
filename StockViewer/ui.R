@@ -4,7 +4,6 @@ library(quantmod)
 library(shiny)
 library(ggplot2)
 library(shinythemes)
-library(shinydashboard)
 
 
 fluidPage(theme = shinytheme("flatly"),
