@@ -31,7 +31,9 @@ Finally, download the repository and open both `ui.R` and `server.R` in Rstudio.
 
 ## Usage
 
-Type whichever stock you want to get the data for in the `Stock` section, and select a date range.
+Type whichever stock you want to get the data for in the `Stock` section, and select a date range. To get the financial statements and other data, just click on the download buttons after typing the stock's ticker. If a stock has never paid any dividends or done a split, when downloading this data you'll get a blank `.csv` file. 
+
+Historical prices only go up to 2007, even if the stock has existed for a longer time.
 
 ## License
 
