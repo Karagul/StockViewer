@@ -18,6 +18,7 @@ shinyServer(function(input, output) {
   }))
   })
   
+  
   financial <- reactive({
     if(input$symbol == 0)
       return(NULL)
@@ -26,8 +27,88 @@ shinyServer(function(input, output) {
       getFinancials(input$symbol, auto.assign = FALSE)
     }))
   })
-
   
+  dividends <- reactive({
+    getDividends(input$symbol, auto.assign = FALSE)
+  })
+  
+  splits <- reactive({
+    getSplits(input$symbol, auto.assign = FALSE)
+  })
+  
+  # Fuck everything about this chunk
+  
+  output$downloadISQ <- downloadHandler(
+    filename = function(){
+      paste0(toupper(input$symbol),  " Quarterly ", "Income Statement", ".csv")
+    },
+    content = function(file){
+      write.csv(financial()$IS$Q, file, row.names = TRUE, col.names = TRUE)
+  })
+  
+  output$downloadBSQ <- downloadHandler(
+    filename = function(){
+      paste0(toupper(input$symbol),  " Quarterly ", "Balance Sheet", ".csv")
+    },
+    content = function(file){
+      write.csv(financial()$BS$Q, file, row.names = TRUE, col.names = TRUE)
+    })
+  
+  output$downloadCFQ <- downloadHandler(
+    filename = function(){
+      paste0(toupper(input$symbol),  " Quarterly ", "Cash Flows", ".csv")
+    },
+    content = function(file){
+      write.csv(financial()$CF$Q, file, row.names = TRUE, col.names = TRUE)
+    })
+  
+  output$downloadISA <- downloadHandler(
+    filename = function(){
+      paste0(toupper(input$symbol),  " Annual ", "Income Statement", ".csv")
+    },
+    content = function(file){
+      write.csv(financial()$IS$A, file, row.names = TRUE, col.names = TRUE)
+    })
+  
+  output$downloadBSA <- downloadHandler(
+    filename = function(){
+      paste0(toupper(input$symbol),  " Annual ", "Balance Sheet", ".csv")
+    },
+    content = function(file){
+      write.csv(financial()$BS$A, file, row.names = TRUE, col.names = TRUE)
+    })
+  
+  output$downloadCFA <- downloadHandler(
+    filename = function(){
+      paste0(toupper(input$symbol),  " Annual ", "Cash Flows", ".csv")
+    },
+    content = function(file){
+      write.csv(financial()$CF$A, file, row.names = TRUE, col.names = TRUE)
+    })
+  
+  output$dividends <- downloadHandler(
+    filename = function(){
+      paste0(toupper(input$symbol),  " Historical Dividends ", ".csv")
+    },
+    content = function(file){
+      write.zoo(dividends(), file, row.names = FALSE, sep = ",")
+    })
+  
+  output$stock_price <- downloadHandler(
+    filename = function(){
+      paste0(toupper(input$symbol),  " OHLC Prices ", ".csv")
+    },
+    content = function(file){
+      write.zoo(symbol(), file, row.names = FALSE, sep = ",")
+    })
+  
+  output$splits <- downloadHandler(
+    filename = function(){
+      paste0(toupper(input$symbol),  " Splits ", ".csv")
+    },
+    content = function(file){
+      write.zoo(splits(), file, row.names = FALSE, sep = ",")
+    })
 
   output$plot <- renderPlot({
       autoplot(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", as.character(format(input$dateRange[2])))])) + 
