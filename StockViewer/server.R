@@ -36,8 +36,6 @@ shinyServer(function(input, output) {
     getSplits(input$symbol, auto.assign = FALSE)
   })
   
-  # Fuck everything about this chunk
-  
   output$downloadISQ <- downloadHandler(
     filename = function(){
       paste0(toupper(input$symbol),  " Quarterly ", "Income Statement", ".csv")
