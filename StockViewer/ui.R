@@ -13,7 +13,7 @@ fluidPage(theme = shinytheme("flatly"),
   headerPanel("Stock Viewer"),
   
   sidebarPanel(
-               textInput("symbol", label = h3("Stock"), value = "", placeholder = "Enter ticker..."),
+               textInput("symbol", label = h3("Ticker"), value = "", placeholder = "Enter ticker..."),
                hr(),
                fluidRow(column(3, verbatimTextOutput("value"))),
                
