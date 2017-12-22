@@ -29,6 +29,8 @@ fluidPage(theme = shinytheme("flatly"),
                helpText("Other Data"),
                splitLayout(downloadButton("dividends", "Dividends"), downloadButton("stock_price", "OHLC Prices"), downloadButton("splits", "Splits")),
                
+               htmlOutput("historical_ratios"),
+               
                helpText("Source: Yahoo Finance, MarketWatch")
                ),
   

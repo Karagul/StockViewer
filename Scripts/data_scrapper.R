@@ -67,6 +67,6 @@ profitability <- ratios$Ratio %in% c("Gross Margin", "Operating Margin", "Pretax
 capital_structure <- ratios$Ratio %in% c("Total Debt to Total Equity", "Total Debt to Total Capital", "Total Debt to Total Assets", "Long-Term Debt to Equity",
                                          "Long-Term Debt to Total Capital")
 
-ratios[valuation,]
+
 
 
