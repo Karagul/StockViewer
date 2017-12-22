@@ -4,6 +4,7 @@ library(quantmod)
 library(shiny)
 library(ggplot2)
 library(shinythemes)
+library(rvest)
 
 
 shinyServer(function(input, output) {
@@ -128,9 +129,6 @@ shinyServer(function(input, output) {
     ratios[capital_structure,]
   })
   
-  
-
-  
   output$title <- renderText({
     title()
   })
@@ -206,7 +204,7 @@ shinyServer(function(input, output) {
     content = function(file){
       write.zoo(splits(), file, row.names = FALSE, sep = ",")
     })
-
+  
   output$plot <- renderPlot({
       autoplot(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", as.character(format(input$dateRange[2])))])) + 
       theme(panel.background = element_rect(fill = "white", colour = "white"), panel.grid.major.y = element_line(colour = rgb(195/255, 195/255, 195/255, alpha = 0.5), 
