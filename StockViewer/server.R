@@ -14,10 +14,8 @@ shinyServer(function(input, output) {
   
   return(isolate({
     getSymbols(input$symbol, src = "yahoo", auto.assign = FALSE)
-    
   }))
   })
-  
   
   financial <- reactive({
     if(input$symbol == 0)
@@ -28,12 +26,113 @@ shinyServer(function(input, output) {
     }))
   })
   
+  title <- reactive({
+    url <- paste0("https://www.marketwatch.com/investing/Stock/", tolower(input$symbol))
+    dat <- read_html(url)
+    name_long <- dat %>% html_node(".company__name") %>% html_text()
+    name_long <- strsplit(name_long, "[.]")[[1]][1]
+    price <- dat %>% html_node(".value") %>% html_text
+    paste0(name_long, " - $",price)
+  })
+  
   dividends <- reactive({
     getDividends(input$symbol, auto.assign = FALSE)
   })
   
   splits <- reactive({
     getSplits(input$symbol, auto.assign = FALSE)
+  })
+  
+  summary <- reactive({
+    url <- paste0("https://www.marketwatch.com/investing/Stock/", tolower(input$symbol))
+    dat <- read_html(url)
+    summary_data <- dat %>% html_nodes(".kv__label") %>% html_text() %>% data.frame()
+    names(summary_data) <- "Key Data"
+    summary_value <- dat %>% html_nodes(".kv__primary") %>% html_text() %>% data.frame()
+    names(summary_value) <- " "
+    cbind(summary_data, summary_value)
+  })
+
+  performance <- reactive({
+    url <- paste0("https://www.marketwatch.com/investing/Stock/", tolower(input$symbol))
+    dat <- read_html(url) 
+    performance_period <- dat %>% html_nodes(".c2 .table__cell:nth-child(1)") %>% html_text() %>% data.frame()
+    names(performance_period) <- "Period"
+    performance_return <- dat %>% html_nodes(".value.ignore-color") %>% html_text() %>% data.frame()
+    names(performance_return) <- "Return"
+    perf <- cbind(performance_period, performance_return)
+    t(perf)
+  })
+  
+  val_rat <- reactive({
+    url2 <- paste0("https://www.marketwatch.com/investing/stock/", tolower(input$symbol), "/profile")
+    dat2 <- read_html(url2)
+    ratios_name <- dat2 %>% html_nodes("#maincontent .column") %>% html_text() %>% data.frame()
+    names(ratios_name) <- "Ratio"
+    ratios_value <- dat2 %>% html_nodes("#maincontent .lastcolumn") %>% html_text() %>% data.frame()
+    names(ratios_value) <- "Value"
+    ratios <- cbind(ratios_name, ratios_value)
+    valuation <- ratios$Ratio %in% c("P/E Current", "P/E Ratio (with extraordinary items)", "P/E Ratio (without extraordinary items)", 
+                                     "Price to Sales Ratio", "Price to Book Ratio", "Price to Cash Flow Ratio", "Enterprise Value to EBITDA", "Enterprise Value to Sales",
+                                     "Total Debt to Enterprise Value")
+    ratios[valuation,]
+  })
+  
+  eff_rat <- reactive({
+      url2 <- paste0("https://www.marketwatch.com/investing/stock/", tolower(input$symbol), "/profile")
+      dat2 <- read_html(url2)
+      ratios_name <- dat2 %>% html_nodes("#maincontent .column") %>% html_text() %>% data.frame()
+      names(ratios_name) <- "Ratio"
+      ratios_value <- dat2 %>% html_nodes("#maincontent .lastcolumn") %>% html_text() %>% data.frame()
+      names(ratios_value) <- "Value"
+      ratios <- cbind(ratios_name, ratios_value)
+      efficiency <- ratios$Ratio %in% c("Revenue/Employee", "Income Per Employee", "Receivables Turnover", "Total Asset Turnover")
+      ratios[efficiency,]
+    })
+  
+  liq_rat <- reactive({
+    url2 <- paste0("https://www.marketwatch.com/investing/stock/", tolower(input$symbol), "/profile")
+    dat2 <- read_html(url2)
+    ratios_name <- dat2 %>% html_nodes("#maincontent .column") %>% html_text() %>% data.frame()
+    names(ratios_name) <- "Ratio"
+    ratios_value <- dat2 %>% html_nodes("#maincontent .lastcolumn") %>% html_text() %>% data.frame()
+    names(ratios_value) <- "Value"
+    ratios <- cbind(ratios_name, ratios_value)
+    liquidity <- ratios$Ratio %in% c("Current Ratio", "Quick Ratio", "Cash Ratio")
+    ratios[liquidity,]
+  })
+  
+  prof_rat <- reactive({
+    url2 <- paste0("https://www.marketwatch.com/investing/stock/", tolower(input$symbol), "/profile")
+    dat2 <- read_html(url2)
+    ratios_name <- dat2 %>% html_nodes("#maincontent .column") %>% html_text() %>% data.frame()
+    names(ratios_name) <- "Ratio"
+    ratios_value <- dat2 %>% html_nodes("#maincontent .lastcolumn") %>% html_text() %>% data.frame()
+    names(ratios_value) <- "Value"
+    ratios <- cbind(ratios_name, ratios_value)
+    profitability <- ratios$Ratio %in% c("Gross Margin", "Operating Margin", "Pretax Margin", "Net Margin", "Return on Assets", "Return on Equity", 
+                                         "Return on Total Capital", "Return on Invested Capital")
+    ratios[profitability,]
+  })
+  
+  cap_str <- reactive({
+    url2 <- paste0("https://www.marketwatch.com/investing/stock/", tolower(input$symbol), "/profile")
+    dat2 <- read_html(url2)
+    ratios_name <- dat2 %>% html_nodes("#maincontent .column") %>% html_text() %>% data.frame()
+    names(ratios_name) <- "Ratio"
+    ratios_value <- dat2 %>% html_nodes("#maincontent .lastcolumn") %>% html_text() %>% data.frame()
+    names(ratios_value) <- "Value"
+    ratios <- cbind(ratios_name, ratios_value)
+    capital_structure <- ratios$Ratio %in% c("Total Debt to Total Equity", "Total Debt to Total Capital", "Total Debt to Total Assets", "Long-Term Debt to Equity",
+                                             "Long-Term Debt to Total Capital")
+    ratios[capital_structure,]
+  })
+  
+  
+
+  
+  output$title <- renderText({
+    title()
   })
   
   output$downloadISQ <- downloadHandler(
@@ -119,7 +218,36 @@ shinyServer(function(input, output) {
       as.character(format(input$dateRange[2])))])) - min(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", 
       as.character(format(input$dateRange[2])))]))), max(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", 
       as.character(format(input$dateRange[2])))])) + 20))) +
-      ggtitle(paste0("Closing Prices for ", toupper(input$symbol), " from ", input$dateRange[1], " to ", input$dateRange[2]))
+      ggtitle(paste0("Closing Prices from ", input$dateRange[1], " to ", input$dateRange[2]))
   })
+  
+  output$summary <- renderTable({
+    summary()
+  }, striped = TRUE, hover = TRUE, width = '100%', colnames = FALSE)
+  
+  output$performance <- renderTable({
+    performance()
+  }, striped = TRUE, hover = TRUE, rownames = TRUE, colnames = FALSE)
+  
+  output$val_rat <- renderTable({
+    val_rat()
+  }, striped = TRUE, hover = TRUE, width = '100%', colnames = FALSE)
+  
+  output$eff_rat <- renderTable({
+    eff_rat()
+  }, striped = TRUE, hover = TRUE, width = '100%', colnames = FALSE)
+  
+  output$liq_rat <- renderTable({
+    liq_rat()
+  }, striped = TRUE, hover = TRUE, width = '100%', colnames = FALSE)
+  
+  output$prof_rat <- renderTable({
+    prof_rat()
+  }, striped = TRUE, hover = TRUE, width = '100%', colnames = FALSE)
+  
+  output$cap_str <- renderTable({
+    cap_str()
+  }, striped = TRUE, hover = TRUE, width = '100%', colnames = FALSE)
+  
 })
 

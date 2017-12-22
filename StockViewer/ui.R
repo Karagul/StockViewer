@@ -27,13 +27,21 @@ fluidPage(theme = shinytheme("flatly"),
                splitLayout(downloadButton("downloadCFQ", "Cash Flow"), downloadButton("downloadCFA", "Cash Flow")),
                
                helpText("Other Data"),
-               splitLayout(downloadButton("dividends", "Dividends"), downloadButton("stock_price", "Prices"), downloadButton("splits", "Splits")),
+               splitLayout(downloadButton("dividends", "Dividends"), downloadButton("stock_price", "OHLC Prices"), downloadButton("splits", "Splits")),
                
                helpText("Source: Yahoo Finance")
-               
                ),
   
   mainPanel(
-    plotOutput("plot")
+    splitLayout(h3(textOutput("title")), tableOutput("performance")),
+    plotOutput("plot"),
+    tabsetPanel(
+      tabPanel("Key Values", tableOutput("summary")),
+      tabPanel("Valuation Ratios", tableOutput("val_rat")),
+      tabPanel("Efficiency Ratios", tableOutput("eff_rat")),
+      tabPanel("Liquidity Ratios", tableOutput("liq_rat")),
+      tabPanel("Profitability Ratios", tableOutput("prof_rat")),
+      tabPanel("Capital Structure", tableOutput("cap_str"))
+    )
   )
 ))
