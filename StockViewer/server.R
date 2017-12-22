@@ -36,6 +36,13 @@ shinyServer(function(input, output) {
     paste0(name_long, " - $",price)
   })
   
+  name_long <- reactive({
+    url <- paste0("https://www.marketwatch.com/investing/Stock/", tolower(input$symbol))
+    dat <- read_html(url)
+    name_long <- dat %>% html_node(".company__name") %>% html_text()
+    name_long <- strsplit(name_long, "[.]")[[1]][1]
+  })
+  
   dividends <- reactive({
     getDividends(input$symbol, auto.assign = FALSE)
   })
@@ -204,6 +211,10 @@ shinyServer(function(input, output) {
     content = function(file){
       write.zoo(splits(), file, row.names = FALSE, sep = ",")
     })
+  
+  output$historical_ratios <- renderUI({
+    tags$a(href = paste0("http://financials.morningstar.com/ajax/exportKR2CSV.html?t=", input$symbol), paste0("Download all historical ratios for ", name_long(), " from MorningStar (Open in Excel)"))
+  })
   
   output$plot <- renderPlot({
       autoplot(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", as.character(format(input$dateRange[2])))])) + 
