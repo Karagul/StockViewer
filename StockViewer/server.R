@@ -69,7 +69,6 @@ shinyServer(function(input, output) {
     performance_return <- dat %>% html_nodes(".value.ignore-color") %>% html_text() %>% data.frame()
     names(performance_return) <- "Return"
     perf <- cbind(performance_period, performance_return)
-    t(perf)
   })
   
   val_rat <- reactive({
@@ -140,52 +139,40 @@ shinyServer(function(input, output) {
     title()
   })
   
-  output$downloadISQ <- downloadHandler(
-    filename = function(){
-      paste0(toupper(input$symbol),  " Quarterly ", "Income Statement", ".csv")
-    },
-    content = function(file){
-      write.csv(financial()$IS$Q, file, row.names = TRUE, col.names = TRUE)
+  fin_q <- reactive({
+    try <- as.numeric(input$fin)
+    financial()[[try]][[1]]
   })
   
-  output$downloadBSQ <- downloadHandler(
+  fin_a <- reactive({
+    try <- as.numeric(input$fin)
+    financial()[[try]][[1]]
+  })
+  
+  statement <- reactive({
+    if(as.numeric(input$fin) == 1){
+      "Income Statement"
+    } else if(as.numeric(input$fin == 2)){
+      "Balance Sheet"
+    } else {
+      "Cash Flows"
+    }
+  })
+  
+  output$quarterly <- downloadHandler(
     filename = function(){
-      paste0(toupper(input$symbol),  " Quarterly ", "Balance Sheet", ".csv")
+      paste0(toupper(input$symbol),  " Quarterly ", statement(), ".csv")
     },
     content = function(file){
-      write.csv(financial()$BS$Q, file, row.names = TRUE, col.names = TRUE)
+      write.csv(fin_q(), file, row.names = TRUE, col.names = TRUE)
     })
   
-  output$downloadCFQ <- downloadHandler(
+  output$annualy <- downloadHandler(
     filename = function(){
-      paste0(toupper(input$symbol),  " Quarterly ", "Cash Flows", ".csv")
+      paste0(toupper(input$symbol),  " Annual ", statement(), ".csv")
     },
     content = function(file){
-      write.csv(financial()$CF$Q, file, row.names = TRUE, col.names = TRUE)
-    })
-  
-  output$downloadISA <- downloadHandler(
-    filename = function(){
-      paste0(toupper(input$symbol),  " Annual ", "Income Statement", ".csv")
-    },
-    content = function(file){
-      write.csv(financial()$IS$A, file, row.names = TRUE, col.names = TRUE)
-    })
-  
-  output$downloadBSA <- downloadHandler(
-    filename = function(){
-      paste0(toupper(input$symbol),  " Annual ", "Balance Sheet", ".csv")
-    },
-    content = function(file){
-      write.csv(financial()$BS$A, file, row.names = TRUE, col.names = TRUE)
-    })
-  
-  output$downloadCFA <- downloadHandler(
-    filename = function(){
-      paste0(toupper(input$symbol),  " Annual ", "Cash Flows", ".csv")
-    },
-    content = function(file){
-      write.csv(financial()$CF$A, file, row.names = TRUE, col.names = TRUE)
+      write.csv(fin_a(), file, row.names = TRUE, col.names = TRUE)
     })
   
   output$dividends <- downloadHandler(
@@ -227,7 +214,7 @@ shinyServer(function(input, output) {
       as.character(format(input$dateRange[2])))])) - min(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", 
       as.character(format(input$dateRange[2])))]))), max(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", 
       as.character(format(input$dateRange[2])))])) + 20))) +
-      ggtitle(paste0("Closing Prices from ", input$dateRange[1], " to ", input$dateRange[2]))
+      ggtitle(paste0("Close Prices from ", input$dateRange[1], " to ", input$dateRange[2]))
   })
   
   output$summary <- renderTable({
@@ -236,7 +223,7 @@ shinyServer(function(input, output) {
   
   output$performance <- renderTable({
     performance()
-  }, striped = TRUE, hover = TRUE, rownames = TRUE, colnames = FALSE)
+  }, striped = TRUE, hover = TRUE, width = '100%', colnames = FALSE)
   
   output$val_rat <- renderTable({
     val_rat()
@@ -259,4 +246,6 @@ shinyServer(function(input, output) {
   }, striped = TRUE, hover = TRUE, width = '100%', colnames = FALSE)
   
 })
+
+
 
