@@ -26,9 +26,9 @@ navbarPage("Stock Viewer", theme = shinytheme("flatly"),
                 helpText("Other Data", style = "margin-top:15px;margin-bot:5px"),
                 splitLayout(downloadButton("dividends", "Dividends", style = "Width:140px"), downloadButton("stock_price", "OHLC Prices", style = "Width:140px"), downloadButton("splits", "Splits", style = "Width:140px")),
                
-                htmlOutput("historical_ratios"),
+                htmlOutput("historical_ratios")
                
-                helpText("Source: Yahoo Finance, MarketWatch", style = "text-align:right")
+
                 
                 ),
   
@@ -47,6 +47,12 @@ navbarPage("Stock Viewer", theme = shinytheme("flatly"),
         tabPanel("Returns", tableOutput("performance"))
               ))
     ),
-  tabPanel("About")
+  tabPanel("About",
+           mainPanel(
+             helpText(h3("Sources:")),
+             helpText("Yahoo Finance"),
+             helpText("MarketWatch"),
+             helpText("Morning Star")
+           ))
 )
 
