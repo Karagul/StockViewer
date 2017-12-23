@@ -213,7 +213,7 @@ shinyServer(function(input, output) {
     })
   
   output$historical_ratios <- renderUI({
-    tags$a(href = paste0("http://financials.morningstar.com/ajax/exportKR2CSV.html?t=", input$symbol), paste0("Download all historical ratios for ", name_long(), " from MorningStar (Open in Excel)"))
+    tags$a(href = paste0("http://financials.morningstar.com/ajax/exportKR2CSV.html?t=", input$symbol), paste0("Download all historical ratios for ", name_long(), " from MorningStar (Open in Excel)"), target = "_blank")
   })
   
   output$plot <- renderPlot({
