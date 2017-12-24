@@ -8,8 +8,12 @@ library(rvest)
 
 
 shinyServer(function(input, output) {
-  # Getting ticker data
   symbol <- reactive({
+    
+    validate(
+      need(input$symbol != "", " ")
+    )
+    
     if(input$symbol == 0)
     return(NULL)
   
@@ -28,6 +32,11 @@ shinyServer(function(input, output) {
   })
   
   title <- reactive({
+    
+    validate(
+      need(input$symbol != "", "Please select a valid ticker")
+    )
+    
     url <- paste0("https://www.marketwatch.com/investing/Stock/", tolower(input$symbol))
     dat <- read_html(url)
     name_long <- dat %>% html_node(".company__name") %>% html_text()
@@ -52,6 +61,10 @@ shinyServer(function(input, output) {
   })
   
   summary <- reactive({
+    
+    validate(
+      need(input$symbol != "", " ")
+    )
     url <- paste0("https://www.marketwatch.com/investing/Stock/", tolower(input$symbol))
     dat <- read_html(url)
     summary_data <- dat %>% html_nodes(".kv__label") %>% html_text() %>% data.frame()
@@ -200,7 +213,8 @@ shinyServer(function(input, output) {
     })
   
   output$historical_ratios <- renderUI({
-    tags$a(href = paste0("http://financials.morningstar.com/ajax/exportKR2CSV.html?t=", input$symbol), paste0("Download all historical ratios for ", name_long(), " from MorningStar (Open in Excel)"))
+    tags$a(href = paste0("http://financials.morningstar.com/ajax/exportKR2CSV.html?t=", input$symbol), class = "btn", 
+           style = "display:block;font-weight:400;border: 1px solidtransparent;background:#95A5A6;border-radius:0.25rem;color:#ffffff;width=200px", icon("download") ,"Historical Ratios")
   })
   
   output$plot <- renderPlot({
