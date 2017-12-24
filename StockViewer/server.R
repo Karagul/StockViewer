@@ -8,8 +8,12 @@ library(rvest)
 
 
 shinyServer(function(input, output) {
-  # Getting ticker data
   symbol <- reactive({
+    
+    validate(
+      need(input$symbol != "", " ")
+    )
+    
     if(input$symbol == 0)
     return(NULL)
   
@@ -28,6 +32,11 @@ shinyServer(function(input, output) {
   })
   
   title <- reactive({
+    
+    validate(
+      need(input$symbol != "", "Please select a valid ticker")
+    )
+    
     url <- paste0("https://www.marketwatch.com/investing/Stock/", tolower(input$symbol))
     dat <- read_html(url)
     name_long <- dat %>% html_node(".company__name") %>% html_text()
@@ -52,6 +61,10 @@ shinyServer(function(input, output) {
   })
   
   summary <- reactive({
+    
+    validate(
+      need(input$symbol != "", " ")
+    )
     url <- paste0("https://www.marketwatch.com/investing/Stock/", tolower(input$symbol))
     dat <- read_html(url)
     summary_data <- dat %>% html_nodes(".kv__label") %>% html_text() %>% data.frame()
@@ -69,7 +82,6 @@ shinyServer(function(input, output) {
     performance_return <- dat %>% html_nodes(".value.ignore-color") %>% html_text() %>% data.frame()
     names(performance_return) <- "Return"
     perf <- cbind(performance_period, performance_return)
-    t(perf)
   })
   
   val_rat <- reactive({
@@ -140,52 +152,40 @@ shinyServer(function(input, output) {
     title()
   })
   
-  output$downloadISQ <- downloadHandler(
-    filename = function(){
-      paste0(toupper(input$symbol),  " Quarterly ", "Income Statement", ".csv")
-    },
-    content = function(file){
-      write.csv(financial()$IS$Q, file, row.names = TRUE, col.names = TRUE)
+  fin_q <- reactive({
+    try <- as.numeric(input$fin)
+    financial()[[try]][[1]]
   })
   
-  output$downloadBSQ <- downloadHandler(
+  fin_a <- reactive({
+    try <- as.numeric(input$fin)
+    financial()[[try]][[1]]
+  })
+  
+  statement <- reactive({
+    if(as.numeric(input$fin) == 1){
+      "Income Statement"
+    } else if(as.numeric(input$fin == 2)){
+      "Balance Sheet"
+    } else {
+      "Cash Flows"
+    }
+  })
+  
+  output$quarterly <- downloadHandler(
     filename = function(){
-      paste0(toupper(input$symbol),  " Quarterly ", "Balance Sheet", ".csv")
+      paste0(toupper(input$symbol),  " Quarterly ", statement(), ".csv")
     },
     content = function(file){
-      write.csv(financial()$BS$Q, file, row.names = TRUE, col.names = TRUE)
+      write.csv(fin_q(), file, row.names = TRUE, col.names = TRUE)
     })
   
-  output$downloadCFQ <- downloadHandler(
+  output$annualy <- downloadHandler(
     filename = function(){
-      paste0(toupper(input$symbol),  " Quarterly ", "Cash Flows", ".csv")
+      paste0(toupper(input$symbol),  " Annual ", statement(), ".csv")
     },
     content = function(file){
-      write.csv(financial()$CF$Q, file, row.names = TRUE, col.names = TRUE)
-    })
-  
-  output$downloadISA <- downloadHandler(
-    filename = function(){
-      paste0(toupper(input$symbol),  " Annual ", "Income Statement", ".csv")
-    },
-    content = function(file){
-      write.csv(financial()$IS$A, file, row.names = TRUE, col.names = TRUE)
-    })
-  
-  output$downloadBSA <- downloadHandler(
-    filename = function(){
-      paste0(toupper(input$symbol),  " Annual ", "Balance Sheet", ".csv")
-    },
-    content = function(file){
-      write.csv(financial()$BS$A, file, row.names = TRUE, col.names = TRUE)
-    })
-  
-  output$downloadCFA <- downloadHandler(
-    filename = function(){
-      paste0(toupper(input$symbol),  " Annual ", "Cash Flows", ".csv")
-    },
-    content = function(file){
-      write.csv(financial()$CF$A, file, row.names = TRUE, col.names = TRUE)
+      write.csv(fin_a(), file, row.names = TRUE, col.names = TRUE)
     })
   
   output$dividends <- downloadHandler(
@@ -213,7 +213,8 @@ shinyServer(function(input, output) {
     })
   
   output$historical_ratios <- renderUI({
-    tags$a(href = paste0("http://financials.morningstar.com/ajax/exportKR2CSV.html?t=", input$symbol), paste0("Download all historical ratios for ", name_long(), " from MorningStar (Open in Excel)"), target = "_blank")
+    tags$a(href = paste0("http://financials.morningstar.com/ajax/exportKR2CSV.html?t=", input$symbol), class = "btn", 
+           style = "display:block;font-weight:400;border: 1px solidtransparent;background:#95A5A6;border-radius:0.25rem;color:#ffffff;width=200px", icon("download") ,"Historical Ratios", target = "_blank")
   })
   
   output$plot <- renderPlot({
@@ -227,7 +228,7 @@ shinyServer(function(input, output) {
       as.character(format(input$dateRange[2])))])) - min(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", 
       as.character(format(input$dateRange[2])))]))), max(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", 
       as.character(format(input$dateRange[2])))])) + 20))) +
-      ggtitle(paste0("Closing Prices from ", input$dateRange[1], " to ", input$dateRange[2]))
+      ggtitle(paste0("Close Prices from ", input$dateRange[1], " to ", input$dateRange[2]))
   })
   
   output$summary <- renderTable({
@@ -236,7 +237,7 @@ shinyServer(function(input, output) {
   
   output$performance <- renderTable({
     performance()
-  }, striped = TRUE, hover = TRUE, rownames = TRUE, colnames = FALSE)
+  }, striped = TRUE, hover = TRUE, width = '100%', colnames = FALSE)
   
   output$val_rat <- renderTable({
     val_rat()
@@ -259,4 +260,6 @@ shinyServer(function(input, output) {
   }, striped = TRUE, hover = TRUE, width = '100%', colnames = FALSE)
   
 })
+
+
 
