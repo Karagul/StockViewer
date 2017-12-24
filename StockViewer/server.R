@@ -214,7 +214,7 @@ shinyServer(function(input, output) {
   
   output$historical_ratios <- renderUI({
     tags$a(href = paste0("http://financials.morningstar.com/ajax/exportKR2CSV.html?t=", input$symbol), class = "btn", 
-           style = "display:block;font-weight:400;border: 1px solidtransparent;background:#95A5A6;border-radius:0.25rem;color:#ffffff;width=200px", icon("download") ,"Historical Ratios")
+           style = "display:block;font-weight:400;border: 1px solidtransparent;background:#95A5A6;border-radius:0.25rem;color:#ffffff;width=200px", icon("download") ,"Historical Ratios", target = "_blank")
   })
   
   output$plot <- renderPlot({
