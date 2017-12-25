@@ -9,7 +9,8 @@ library(shinycssloaders)
 navbarPage("Stock Viewer", theme = shinytheme("flatly"), 
 
   tabPanel("Main",
-      sidebarPanel(
+      sidebarPanel(tags$style(type="text/css",
+                              ".recalculating {opacity: 1.0;}"),
                 div( 
                 textInput("symbol", label = h3("Ticker"), value = "", placeholder = "Enter ticker..."),
                 hr(),
