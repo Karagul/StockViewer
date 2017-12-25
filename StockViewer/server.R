@@ -60,7 +60,6 @@ shinyServer(function(input, output) {
   })
   
   summary <- reactive({
-    
     validate(
       need(input$symbol != "", " ")
     )
@@ -259,7 +258,11 @@ shinyServer(function(input, output) {
     cap_str()
   }, striped = TRUE, hover = TRUE, width = '100%', colnames = FALSE)
   
+  lapply(c("summary", "performance", "val_rat", "eff_rat", "liq_rat", "prof_rat", "cap_str"),
+         function(x) outputOptions(output, x, suspendWhenHidden = FALSE))
 })
+
+
 
 
 
