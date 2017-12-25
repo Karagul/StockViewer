@@ -5,6 +5,7 @@ library(shiny)
 library(ggplot2)
 library(shinythemes)
 library(shinycssloaders)
+library(dplyr)
 
 navbarPage("Stock Viewer", theme = shinytheme("flatly"), 
 
@@ -33,7 +34,7 @@ navbarPage("Stock Viewer", theme = shinytheme("flatly"),
                 ),
   
     mainPanel(
-      splitLayout(h3(htmlOutput("title")), dateRangeInput('dateRange',
+      splitLayout(h3(htmlOutput("title", style = "white-space: normal !important")), dateRangeInput('dateRange',
                                            label = 'Date Range: Year - Month - Day',
                                            start = Sys.Date() - 366, end = Sys.Date() - 1, min = "2007-01-01", max = Sys.Date(), startview = "decade", width = "100%")),
       plotOutput("plot") %>% withSpinner(1, color = "#2C3E50"),
