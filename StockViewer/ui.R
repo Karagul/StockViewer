@@ -4,13 +4,13 @@ library(quantmod)
 library(shiny)
 library(ggplot2)
 library(shinythemes)
+library(shinycssloaders)
 
+navbarPage("Stock Viewer", theme = shinytheme("flatly"), 
 
-navbarPage("Stock Viewer", theme = shinytheme("flatly"),
-  
   tabPanel("Main",
       sidebarPanel(
-                div(
+                div( 
                 textInput("symbol", label = h3("Ticker"), value = "", placeholder = "Enter ticker..."),
                 hr(),
                 fluidRow(column(3, verbatimTextOutput("value")))),
@@ -23,18 +23,19 @@ navbarPage("Stock Viewer", theme = shinytheme("flatly"),
                 splitLayout(downloadButton("quarterly", "Quarterly", style = "Width:200px;display:block;margin:0 auto;margin-top:0px;margin-bot:5px"), 
                             downloadButton("annualy", "Annualy", style = "Width:200px;display:block;margin:0 auto;margin-top:0px;margin-bot:5px")),
                
-                helpText(h3(" Download Other Data"), style = "margin-top:15px;margin-bot:5px;color:#2C3E50"),
+                helpText(h3("Download Other Data"), style = "margin-top:15px;margin-bot:5px;color:#2C3E50;font-weight:bold"),
                 splitLayout(downloadButton("stock_price", "OHLC Prices", style = "Width:200px;display:block;margin:0 auto;margin-top:5px;margin-bot:5px"), downloadButton("splits", "Splits", style = "Width:200px;display:block;margin:0 auto;margin-top:5px;margin-bot:5px")),
                
-                splitLayout(downloadButton("dividends", "Dividends", style = "Width:200px;display:block;margin:0 auto;margin-top:5px;margin-bot:5px"), uiOutput("historical_ratios", style = "Width:200px;display:block;margin:0 auto;margin-top:5px;margin-bot:5px"))
+                splitLayout(downloadButton("dividends", "Dividends", style = "Width:200px;display:block;margin:0 auto;margin-top:5px;margin-bot:5px"), 
+                            uiOutput("historical_ratios", style = "Width:200px;display:block;margin:0 auto;margin-top:5px;margin-bot:5px"))
                 
                 ),
   
     mainPanel(
-      splitLayout(h3(textOutput("title")), dateRangeInput('dateRange',
+      splitLayout(h3(htmlOutput("title")), dateRangeInput('dateRange',
                                            label = 'Date Range: Year - Month - Day',
                                            start = Sys.Date() - 366, end = Sys.Date() - 1, min = "2007-01-01", max = Sys.Date(), startview = "decade", width = "100%")),
-      plotOutput("plot"),
+      plotOutput("plot") %>% withSpinner(1, color = "#2C3E50"),
       tabsetPanel(
         tabPanel("Key Values", tableOutput("summary")),
         tabPanel("Valuation Ratios", tableOutput("val_rat")),
@@ -45,7 +46,7 @@ navbarPage("Stock Viewer", theme = shinytheme("flatly"),
         tabPanel("Returns", tableOutput("performance"))
               ))
     ),
-  tabPanel("About",
+  tabPanel("About", 
            mainPanel(
              helpText(h3("Sources:")),
              helpText("Yahoo Finance"),
