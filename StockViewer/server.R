@@ -91,8 +91,8 @@ shinyServer(function(input, output) {
     names(ratios_value) <- "Value"
     ratios <- cbind(ratios_name, ratios_value)
     valuation <- ratios$Ratio %in% c("P/E Current", "P/E Ratio (with extraordinary items)", "P/E Ratio (without extraordinary items)", 
-                                     "Price to Sales Ratio", "Price to Book Ratio", "Price to Cash Flow Ratio", "Enterprise Value to EBITDA", "Enterprise Value to Sales",
-                                     "Total Debt to Enterprise Value")
+                                     "Price to Sales Ratio", "Price to Book Ratio", "Price to Cash Flow Ratio", "Enterprise Value to EBITDA", 
+                                     "Enterprise Value to Sales", "Total Debt to Enterprise Value")
     ratios[valuation,]
   })
   
@@ -211,7 +211,8 @@ shinyServer(function(input, output) {
     })
   
   output$historical_ratios <- renderUI({
-    tags$a(href = paste0("http://financials.morningstar.com/ajax/exportKR2CSV.html?t=", input$symbol), class = "btn btn-default shiny-download-link  shiny-bound-output", 
+    tags$a(href = paste0("http://financials.morningstar.com/ajax/exportKR2CSV.html?t=", input$symbol), 
+           class = "btn btn-default shiny-download-link  shiny-bound-output", 
            style = "width:200px", 
            icon("download") ,"Historical Ratios", target = "_blank")
   })
