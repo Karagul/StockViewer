@@ -2,7 +2,7 @@
 
 A shiny app developed to view historical stock prices and retrieve other financial data.
 
-![](C:\Users\Martin\Documents\Projects\R\StockViewer\Images\preview.png)
+![](https://raw.githubusercontent.com/Sankatt/StockViewer/master/Images/preview.png)
 
 ## Installation 
 
