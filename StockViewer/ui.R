@@ -7,26 +7,25 @@ library(shinythemes)
 library(shinycssloaders)
 library(dplyr)
 
-
-
 navbarPage("Stock Viewer", theme = shinytheme("flatly"), 
-          
-           
   tabPanel("Main", 
-           
       sidebarPanel(tags$style(type="text/css",
                               ".recalculating {opacity: 1.0;}
                               body    {overflow-y:scroll;}"),
                 div( 
-                  textInput("symbol", label = h3("Ticker"), value = "", placeholder = "Enter ticker..."),
+                  textInput("symbol", 
+                            label = h3("Ticker"), 
+                            value = "", 
+                            placeholder = "Enter ticker..."),
                   hr(),
                   fluidRow(column(3, verbatimTextOutput("value")))
                   ),
                 
                 div(
-                  selectInput("fin", label = h3("Download Financial Statements"),
-                  choices = list("Income Statement" = as.integer(1), "Balance Sheet" = 2, "Cash Flow" = 3),
-                  selected = 1)),
+                  selectInput("fin", 
+                              label = h3("Download Financial Statements"),
+                              choices = list("Income Statement" = as.integer(1), "Balance Sheet" = 2, "Cash Flow" = 3),
+                              selected = 1)),
                 
                   splitLayout(downloadButton("quarterly", "Quarterly", style = "Width:200px;
                                                                                 display:block;
@@ -69,8 +68,14 @@ navbarPage("Stock Viewer", theme = shinytheme("flatly"),
     
     mainPanel(
       splitLayout(h3(htmlOutput("title", style = "white-space: normal !important")), 
-                     dateRangeInput('dateRange', label = 'Date Range: Year - Month - Day', start = Sys.Date() - 366, end = Sys.Date() - 1, min = "2007-01-01", 
-                                    max = Sys.Date(), startview = "decade", width = "100%")),
+                     dateRangeInput('dateRange', 
+                                    label = 'Date Range: Year - Month - Day', 
+                                    start = Sys.Date() - 366, 
+                                    end = Sys.Date() - 1,
+                                    min = "2007-01-01", 
+                                    max = Sys.Date(), 
+                                    startview = "decade", 
+                                    width = "100%")),
       
       plotOutput("plot") %>% withSpinner(1, color = "#2C3E50"),
       
@@ -86,7 +91,6 @@ navbarPage("Stock Viewer", theme = shinytheme("flatly"),
     ),
   
   tabPanel("About", 
-           
            mainPanel(
              helpText(h3("About", style = "color:#2C3E50")),
              helpText("Stock Viewer is meant to be a fast and easy platform for anyone to download free stock market data. 
@@ -99,15 +103,21 @@ navbarPage("Stock Viewer", theme = shinytheme("flatly"),
              helpText(h3("Contact", style = "color:#2C3E50")),
              helpText("This app is developed and mantained by Martin Rodriguez, any questions or comments should be sent to: m.rodriguezf@alum.up.edu.pe"),
              
-             actionButton(inputId = "", label = "" , style = "background:#ffffff;
-                                                              color:#2C3E50;
-                                                              border-color:#2C3E50" , 
-                          icon = icon("linkedin"), onclick ="window.open('https://www.linkedin.com/in/mart%C3%ADn-rodr%C3%ADguez-frumento-19773b149/', '_blank')"),
+             actionButton(inputId = "", 
+                          label = "" , 
+                          style = "background:#ffffff;
+                                   color:#2C3E50;
+                                   border-color:#2C3E50", 
+                          icon = icon("linkedin"), 
+                          onclick ="window.open('https://www.linkedin.com/in/mart%C3%ADn-rodr%C3%ADguez-frumento-19773b149/', '_blank')"),
              
-             actionButton(inputId = "", label = "" , style = "background:#ffffff;
-                                                              color:#2C3E50;
-                                                              border-color:#2C3E50" , 
-                          icon = icon("github"), onclick ="window.open('https://github.com/Sankatt', '_blank')")
+             actionButton(inputId = "", 
+                          label = "" , 
+                          style = "background:#ffffff;
+                                   color:#2C3E50;
+                                   border-color:#2C3E50" , 
+                          icon = icon("github"), 
+                          onclick ="window.open('https://github.com/Sankatt', '_blank')")
            ))
 )
 
