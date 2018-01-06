@@ -7,6 +7,12 @@ library(shinythemes)
 library(shinycssloaders)
 library(dplyr)
 
+about_txt <- "Stock Viewer is meant to be a fast and easy platform for anyone to download free stock market data. 
+              All information can be downloaded as a CSV file, which can easily be opened in Excel or any other platform."
+source_txt <- "Historical stock data (prices, dividends, splits) is retrieved from Yahoo Finance, current ratios and key values from Market Watch, 
+               and historical ratios from Morning Star."
+contact_txt <- "This app is developed and mantained by Martin Rodriguez, any questions or comments should be sent to: m.rodriguezf@alum.up.edu.pe"
+
 navbarPage("Stock Viewer", theme = shinytheme("flatly"), 
   tabPanel("Main", 
       sidebarPanel(tags$style(type="text/css",
@@ -93,15 +99,13 @@ navbarPage("Stock Viewer", theme = shinytheme("flatly"),
   tabPanel("About", 
            mainPanel(
              helpText(h3("About", style = "color:#2C3E50")),
-             helpText("Stock Viewer is meant to be a fast and easy platform for anyone to download free stock market data. 
-                      All information can be downloaded as a CSV file, which can easily be opened in Excel or any other platform."),
+             helpText(about_txt),
              
              helpText(h3("Sources", style = "color:#2C3E50")),
-             helpText("Historical stock data (prices, dividends, splits) is retrieved from Yahoo Finance, current ratios and key values from Market Watch, 
-                      and historical ratios from Morning Star."),
+             helpText(source_txt),
              
              helpText(h3("Contact", style = "color:#2C3E50")),
-             helpText("This app is developed and mantained by Martin Rodriguez, any questions or comments should be sent to: m.rodriguezf@alum.up.edu.pe"),
+             helpText(contact_txt),
              
              actionButton(inputId = "", 
                           label = "" , 
