@@ -6,6 +6,7 @@ library(ggplot2)
 library(shinythemes)
 library(rvest)
 library(scales)
+library(plotly)
 
 shinyServer(function(input, output) {
   symbol <- reactive({

@@ -26,6 +26,10 @@ price <- paste0("$",price)
 
 updated <- dat %>% html_node(".timestamp__time , .kv__item:nth-child(1) .kv__primary") %>% html_text()
 
+# Get Price Variation
+
+price_var <- dat %>% html_nodes(".change--percent--q bg-quote") %>% html_text()
+
 # Get Summary data
 
 summary_data <- dat %>% html_nodes(".kv__label") %>% html_text() %>% data.frame()
@@ -66,7 +70,4 @@ profitability <- ratios$Ratio %in% c("Gross Margin", "Operating Margin", "Pretax
 
 capital_structure <- ratios$Ratio %in% c("Total Debt to Total Equity", "Total Debt to Total Capital", "Total Debt to Total Assets", "Long-Term Debt to Equity",
                                          "Long-Term Debt to Total Capital")
-
-
-
 
