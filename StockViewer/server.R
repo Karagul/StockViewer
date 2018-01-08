@@ -5,6 +5,8 @@ library(shiny)
 library(ggplot2)
 library(shinythemes)
 library(rvest)
+library(scales)
+library(plotly)
 
 shinyServer(function(input, output) {
   symbol <- reactive({
@@ -219,16 +221,26 @@ shinyServer(function(input, output) {
   
   output$plot <- renderPlot({
       autoplot(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", as.character(format(input$dateRange[2])))])) + 
-      theme(panel.background = element_rect(fill = "white", colour = "white"), panel.grid.major.y = element_line(colour = rgb(195/255, 195/255, 195/255, alpha = 0.5), 
-      linetype = "solid"), plot.background = element_rect(fill = "white", colour = "white"), 
-      text = element_text(size = 12, family = "Lato", color = rgb(44/255, 62/255, 80/255)), plot.title = element_text(face = "bold", size = 18)) + 
-      labs(x = "", y = "Close Price (US$)") + geom_area(fill = "#0066B2", alpha = 0.3) + geom_line(size = 1, col = "#0066B2") + 
-      scale_y_continuous(position = "right", limits = c(0, min(max(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", 
+      theme(panel.background = element_rect(fill = "white", colour = "white"), 
+            panel.grid.major.y = element_line(colour = rgb(195/255, 195/255, 195/255, alpha = 0.5), linetype = "solid"), 
+            plot.background = element_rect(fill = "white", colour = "white"), 
+            text = element_text(size = 12, family = "Lato", color = rgb(44/255, 62/255, 80/255)), 
+            plot.title = element_text(face = "bold", size = 18),
+            axis.ticks.y = element_blank()) + 
+      labs(x = "", y = "") + geom_area(fill = "#0066B2", alpha = 0.3) + geom_line(size = 1, col = "#0066B2") + 
+      scale_y_continuous(position = "right",
+                         labels = dollar,
+                         limits = c(0, min(max(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", 
       as.character(format(input$dateRange[2])))])) + (max(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", 
       as.character(format(input$dateRange[2])))])) - min(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", 
       as.character(format(input$dateRange[2])))]))), max(Cl(symbol()[paste0(as.character(format(input$dateRange[1])), "/", 
       as.character(format(input$dateRange[2])))])) + 20))) +
-      ggtitle(paste0("Close Prices from ", input$dateRange[1], " to ", input$dateRange[2]))
+      ggtitle(ifelse(input$dateRange > index(symbol()[1]),
+        (ifelse(substr(input$dateRange[1], 1, 7) == substr(input$dateRange[2], 1, 7), 
+                     paste0("Close Prices for ", format(as.Date(input$dateRange[1], "%Y-%m-%d"), "%B %Y")),
+                     paste0("Close Prices from ", format(as.Date(input$dateRange[1], "%Y-%m-%d"), "%B %Y"), " to ", 
+                            format(as.Date(input$dateRange[2], "%Y-%m-%d"), "%B %Y")))),
+        paste0("Close Prices from IPO (", format(index(symbol()[1]), "%B %Y"), ") to ", format(as.Date(input$dateRange[2], "%Y-%m-%d"), "%B %Y"))))
   })
   
   output$summary <- renderTable({
