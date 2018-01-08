@@ -2,11 +2,9 @@ library(scales)
 library(tidyverse)
 library(quantmod)
 
+share <- getSymbols("SNAP", auto.assign = F) 
 
-
-share <- getSymbols("SNAP", auto.assign = F)
-
-returns <- share[,6]
+returns <- share[,6] # Get adjusted prices
 returns <- ((returns[,1] - returns[[1]]) / returns[[1]])
 
 autoplot(returns) + 
