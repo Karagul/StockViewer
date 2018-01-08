@@ -19,3 +19,4 @@ autoplot(returns) +
                      labels = percent)
 
 
+ggplot(returns, aes(x = index)) + geom_line(aes(y = returns[,2], group = 1)) + geom_line(aes(y = volatility, group = 1)) + scale_y_log10()

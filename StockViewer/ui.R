@@ -27,6 +27,11 @@ navbarPage("Stock Viewer", theme = shinytheme("flatly"),
                   fluidRow(column(3, verbatimTextOutput("value")))
                   ),
                 
+                selectInput("plot_type",
+                             label = h3("Select plot type"),
+                             choices = list("Close Prices" = as.integer(1), "Returns" = 2, "Volatility" = 3),
+                             selected = 1),
+                
                 div(
                   selectInput("fin", 
                               label = h3("Download Financial Statements"),
