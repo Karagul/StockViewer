@@ -6,6 +6,7 @@ library(ggplot2)
 library(shinythemes)
 library(shinycssloaders)
 library(dplyr)
+library(shinyjs)
 
 about_txt <- "Stock Viewer is meant to be a fast and easy platform for anyone to download free stock market data. 
               All information can be downloaded as a CSV file, which can easily be opened in Excel or any other platform."
@@ -14,6 +15,7 @@ source_txt <- "Historical stock data (prices, dividends, splits) is retrieved fr
 contact_txt <- "This app is developed and mantained by Martin Rodriguez, any questions or comments should be sent to: m.rodriguezf@alum.up.edu.pe"
 
 navbarPage("Stock Viewer", theme = shinytheme("flatly"), 
+
   tabPanel("Main", 
       sidebarPanel(tags$style(type="text/css",
                               ".recalculating {opacity: 1.0;}
@@ -29,7 +31,7 @@ navbarPage("Stock Viewer", theme = shinytheme("flatly"),
                 
                 selectInput("plot_type",
                              label = h3("Select plot type"),
-                             choices = list("Close Prices" = as.integer(1), "Returns" = 2, "Volatility" = 3),
+                             choices = list("Close Prices" = as.integer(1), "Returns" = 2, "Volume" = 3),
                              selected = 1),
                 
                 div(

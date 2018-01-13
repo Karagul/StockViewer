@@ -28,7 +28,7 @@ shinyServer(function(input, output) {
       return(NULL)
     
     return(isolate({
-      getFinancials(input$symbol, auto.assign = FALSE)
+      getFinancials(input$symbol,auto.assign = FALSE)
     }))
   })
   
@@ -315,6 +315,7 @@ shinyServer(function(input, output) {
   
   lapply(c("summary", "performance", "val_rat", "eff_rat", "liq_rat", "prof_rat", "cap_str"),
          function(x) outputOptions(output, x, suspendWhenHidden = FALSE))
+
 })
 
 
