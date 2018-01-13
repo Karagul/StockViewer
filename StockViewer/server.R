@@ -263,9 +263,8 @@ shinyServer(function(input, output) {
                                       format(as.Date(input$dateRange[2], "%Y-%m-%d"), "%B %Y")))),
                        paste0("Returns from IPO (", format(index(symbol()[1]), "%B %Y"), ") to ", format(as.Date(input$dateRange[2], "%Y-%m-%d"), "%B %Y"))))
     } else if (input$plot_type == 3) {
-      returns <- symbol()[,5]
+      returns <- Vo(symbol())
       returns <- returns[paste0(as.character(format(input$dateRange[1])), "/", as.character(format(input$dateRange[2])))]
-      returns <- returns <- ((returns[,1] - returns[[1]]) / returns[[1]])
       autoplot(returns) + 
         theme(panel.background = element_rect(fill = "white", colour = "white"), 
               panel.grid.major.y = element_line(colour = rgb(195/255, 195/255, 195/255, alpha = 0.5), linetype = "solid"), 
@@ -278,10 +277,10 @@ shinyServer(function(input, output) {
                            labels = scientific) +
         ggtitle(ifelse(input$dateRange > index(symbol()[1]),
                        (ifelse(substr(input$dateRange[1], 1, 7) == substr(input$dateRange[2], 1, 7), 
-                               paste0("Volatility for ", format(as.Date(input$dateRange[1], "%Y-%m-%d"), "%B %Y")),
-                               paste0("Volatility from ", format(as.Date(input$dateRange[1], "%Y-%m-%d"), "%B %Y"), " to ", 
+                               paste0("Volume for ", format(as.Date(input$dateRange[1], "%Y-%m-%d"), "%B %Y")),
+                               paste0("Volume from ", format(as.Date(input$dateRange[1], "%Y-%m-%d"), "%B %Y"), " to ", 
                                       format(as.Date(input$dateRange[2], "%Y-%m-%d"), "%B %Y")))),
-                       paste0("Volatility from IPO (", format(index(symbol()[1]), "%B %Y"), ") to ", format(as.Date(input$dateRange[2], "%Y-%m-%d"), "%B %Y"))))
+                       paste0("Volume since IPO (", format(index(symbol()[1]), "%B %Y"), ") to ", format(as.Date(input$dateRange[2], "%Y-%m-%d"), "%B %Y"))))
     }
   })
   
