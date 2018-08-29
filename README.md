@@ -1,6 +1,6 @@
 # StockViewer
 
-A shiny app developed to view historical stock prices and retrieve other financial data. You can access the app from your favourite browser by clicking [here](https://sankat.shinyapps.io/Stock-Viewer/).
+A shiny app developed to view historical stock prices and retrieve other financial data.
 
 ![](https://raw.githubusercontent.com/Sankatt/StockViewer/master/Images/preview.png)
 
